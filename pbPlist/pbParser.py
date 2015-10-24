@@ -40,7 +40,7 @@ class PBParser(object):
                     raise Exception(message)
                 return None
             else:
-                return {}
+                return pbItem.pbItemResolver(pbRoot.pbRoot(), 'dictionary')
         else:
             return self.__parse(requires_object)
     
@@ -48,20 +48,20 @@ class PBParser(object):
         starting_character = self.data[self.index]
         if starting_character == '{':
             # parse dictionary print('parsing dictionary')
-            return self.__parseDict()
+            return pbItem.pbItemResolver(self.__parseDict(), 'dictionary')
         elif starting_character == '(':
             # parse array print('parsing array')
-            return self.__parseArray()
+            return pbItem.pbItemResolver(self.__parseArray(), 'array')
         elif starting_character == '<':
             # parse data print('parsing data')
-            return self.__parseData()
+            return pbItem.pbItemResolver(self.__parseData(), 'data')
         elif starting_character == '\'' or starting_character == '\"':
             # parse quoted string print('parsing quoted string')
-            return self.__parseQuotedString()
+            return pbItem.pbItemResolver(self.__parseQuotedString(), 'qstring')
         elif StrParse.IsValidUnquotedStringCharacter(starting_character) == True:
             # parse unquoted string
             # print('parsing unquoted string')
-            return self.__parseUnquotedString()
+            return pbItem.pbItemResolver(self.__parseUnquotedString(), 'string')
         else:
             if requires_object == True:
                 message = 'Unexpected character "0x'+str(format(ord(starting_character), 'x'))+'" at line '+str(StrParse.LineNumberForIndex(self.data, self.index))
@@ -79,7 +79,7 @@ class PBParser(object):
             else:
                 break
         if start_index != self.index:
-            return pbItem.pbItem(self.data[start_index:self.index])
+            return self.data[start_index:self.index]
         else:
             message = 'Unexpected EOF'
             raise Exception(message)
@@ -103,7 +103,7 @@ class PBParser(object):
         else:
             string_without_quotes = StrParse.UnQuotifyString(self.data, start_index, self.index)
             self.index += 1 # advance past quote character
-            return pbItem.pbItem(string_without_quotes)
+            return string_without_quotes
     
     def __parseData(self):
         string_length = len(self.data)
@@ -131,7 +131,7 @@ class PBParser(object):
             message = 'Expected terminating >" for data at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         data_object = bytearray.fromhex(byte_stream)
-        return pbItem.pbItem(data_object)
+        return data_object
     
     def __parseArray(self):
         array_objects = []
@@ -150,7 +150,7 @@ class PBParser(object):
             message = 'Expected terminating ")" for array at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending ")"
-        return pbItem.pbItem(array_objects)
+        return array_objects
     
     
     def __parseDict(self):
@@ -183,4 +183,4 @@ class PBParser(object):
             message = 'Expected terminating "}" for dictionary at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending "}"
-        return pbItem.pbItem(dictionary)
+        return dictionary
