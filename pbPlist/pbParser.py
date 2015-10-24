@@ -2,6 +2,7 @@ import re
 
 import string_helper as StrParse
 import pbRoot
+import pbKey
 import pbItem
 
 class PBParser(object):
@@ -46,20 +47,16 @@ class PBParser(object):
     def __parse(self, requires_object=True):
         starting_character = self.data[self.index]
         if starting_character == '{':
-            # parse dictionary
-            # print('parsing dictionary')
+            # parse dictionary print('parsing dictionary')
             return self.__parseDict()
         elif starting_character == '(':
-            # parse array
-            # print('parsing array')
+            # parse array print('parsing array')
             return self.__parseArray()
         elif starting_character == '<':
-            # parse data
-            # print('parsing data')
+            # parse data print('parsing data')
             return self.__parseData()
         elif starting_character == '\'' or starting_character == '\"':
-            # parse quoted string
-            # print('parsing quoted string')
+            # parse quoted string print('parsing quoted string')
             return self.__parseQuotedString()
         elif StrParse.IsValidUnquotedStringCharacter(starting_character) == True:
             # parse unquoted string
@@ -82,7 +79,7 @@ class PBParser(object):
             else:
                 break
         if start_index != self.index:
-            return self.data[start_index:self.index]
+            return pbItem.pbItem(self.data[start_index:self.index])
         else:
             message = 'Unexpected EOF'
             raise Exception(message)
@@ -106,7 +103,7 @@ class PBParser(object):
         else:
             string_without_quotes = StrParse.UnQuotifyString(self.data, start_index, self.index)
             self.index += 1 # advance past quote character
-            return string_without_quotes
+            return pbItem.pbItem(string_without_quotes)
     
     def __parseData(self):
         string_length = len(self.data)
@@ -134,7 +131,7 @@ class PBParser(object):
             message = 'Expected terminating >" for data at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         data_object = bytearray.fromhex(byte_stream)
-        return data_object
+        return pbItem.pbItem(data_object)
     
     def __parseArray(self):
         array_objects = []
@@ -153,7 +150,7 @@ class PBParser(object):
             message = 'Expected terminating ")" for array at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending ")"
-        return array_objects
+        return pbItem.pbItem(array_objects)
     
     
     def __parseDict(self):
@@ -162,13 +159,14 @@ class PBParser(object):
         start_index = self.index
         new_object = self.__readTest(False)
         while new_object != None:
-            key_object = pbItem.pbItem(new_object, '')
+            key_object = pbKey.pbKey(new_object, '')
             can_parse, self.index = StrParse.IndexOfNextNonSpace(self.data, self.index)
             current_char = self.data[self.index]
             if current_char == '=':
                 self.index += 1
                 new_object = self.__readTest(True)
             elif current_char == ';':
+                # this is for strings files where the key and the value may be the same thing
                 self.index += 1
                 new_object = pbItem.pbItem(new_object, '')
             else:
@@ -185,4 +183,4 @@ class PBParser(object):
             message = 'Expected terminating "}" for dictionary at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending "}"
-        return dictionary
+        return pbItem.pbItem(dictionary)

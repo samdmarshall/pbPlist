@@ -1,6 +1,6 @@
 import collections
 
-import pbItem
+import pbKey
 
 class pbRoot(collections.MutableMapping):
 
@@ -35,8 +35,8 @@ class pbRoot(collections.MutableMapping):
         return len(self.key_storage)
 
     def __keytransform__(self, key):
-        if isinstance(key, pbItem.pbItem):
+        if isinstance(key, pbKey.pbKey):
             return key.name
         else:
-            message = 'The class "'+self.__class__.__name__+'" only supports "pbItems" as keys.'
+            message = 'The class "'+self.__class__.__name__+'" only supports "pbKey" as keys.'
             raise TypeError(message)
