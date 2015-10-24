@@ -182,7 +182,6 @@ class PBParser(object):
             new_object = self.__readTest(False)
         current_char = self.data[self.index]
         if current_char != '}':
-            print self.data[:self.index]
             message = 'Expected terminating "}" for dictionary at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending "}"

@@ -11,7 +11,6 @@ for subdir, dirs, files in os.walk(tests_path):
         print('Running test "'+test_case+'"...')
         try:
             plist = pbPlist.PBPlist(test_case_plist_path)
-            print(plist.root)
         except:
             print('Test failure on test "'+test_case+'"!')
             raise
