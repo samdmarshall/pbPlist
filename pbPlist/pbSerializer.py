@@ -1,9 +1,7 @@
 import sys
 
 import pbRoot
-import pbKey
 import pbItem
-
 
 class PBSerializer(object):
     

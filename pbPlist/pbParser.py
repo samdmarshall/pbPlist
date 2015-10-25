@@ -25,8 +25,10 @@ class PBParser(object):
         if prefix == 'bplist' or prefix == '<?xml ':
             if prefix == 'bplist':
                 self.file_type = 'binary'
-                message = 'binary plists are currently not supported!'
-                raise Exception(message)
+                import sys
+                if not sys.version_info >= (3, 4):
+                    message = 'Attempting to load file "%s": binary plists are currently not supported!' % (self.file_path)
+                    raise Exception(message)
             if prefix == '<?xml ':
                 self.file_type = 'xml'
             import plistlib
@@ -54,7 +56,7 @@ class PBParser(object):
                     raise Exception(message)
                 return None
             else:
-                return pbItem.pbItemResolver(pbRoot.pbRoot(), 'dictionary')
+                return None
         else:
             return self.__parse(requires_object)
     
@@ -173,8 +175,8 @@ class PBParser(object):
         start_index = self.index
         new_object = self.__readTest(False)
         while new_object != None:
-            can_parse, self.index, annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
-            key_object = pbKey.pbKey(new_object, annotation)
+            can_parse, self.index, new_object.annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
+            key_object = new_object
             current_char = self.data[self.index]
             if current_char == '=':
                 self.index += 1

@@ -29,8 +29,16 @@ class pbItem(object):
     
     def __eq__(self, other):
         is_equal = False
-        if isinstance(other, pbItem) and other.type_name == self.type_name:
-            is_equal = (other.value == self.value)
+        if other != None:
+            can_compare_types = False
+            if type(other) == str:
+                other = pbItemResolver(other, 'qstring')
+            if self.type_name == 'string' or self.type_name == 'qstring':
+                can_compare_types = (other.type_name == 'string' or other.type_name == 'qstring')
+            else:
+                can_compare_types = (other.type_name == self.type_name)
+            if can_compare_types == True:
+                is_equal = (other.value == self.value)
         return is_equal
     
     def __hash__(self):
@@ -39,7 +47,28 @@ class pbItem(object):
     def __repr__(self):
         return self.value
     
-    def writeString(self, indent_level=0):
+    def __iter__(self):
+        return iter(self.value)
+    
+    def __getattr__(self, attrib):
+        return getattr(self.value, attrib)
+   
+    def __str__(self):
+        return self.writeString(0, False)[0]
+
+    def __getitem__(self, key):
+        return self.value.__getitem__(key)
+
+    def __setitem__(self, key, value):
+        self.value.__setitem__(key, value)
+    
+    def __len__(self):
+        return len(self.value)
+    
+    def __contains__(self, item):
+        return self.value.__contains__(item)
+    
+    def writeString(self, indent_level=0, pretty=True):
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
     
@@ -53,24 +82,26 @@ class pbItem(object):
         return output_string
 
 class pbString(pbItem):
-    def writeString(self, indent_level=0):
+    def writeString(self, indent_level=0, pretty=True):
         string_string = ''
         string_string += self.value
-        string_string += self.writeAnnotation()
+        if pretty == True:
+            string_string += self.writeAnnotation()
         return (string_string, indent_level)
     
 class pbQString(pbItem):
-    def writeString(self, indent_level=0):
+    def writeString(self, indent_level=0, pretty=True):
         qstring_string = ''
         qstring_string += '"'
         for character in self.value:
             qstring_string += StrParse.SanitizeCharacter(character)
         qstring_string += '"'
-        qstring_string += self.writeAnnotation()
+        if pretty == True:
+            qstring_string += self.writeAnnotation()
         return (qstring_string, indent_level)
         
 class pbData(pbItem):
-    def writeString(self, indent_level=0):
+    def writeString(self, indent_level=0, pretty=True):
         data_string = ''
         indent_level = PushIndent(indent_level)
         data_string += '<'
@@ -90,12 +121,13 @@ class pbData(pbItem):
                 data_string += ' ' # indent an additional space to make the byte groupings line up
                 grouping_line_counter = 0
         data_string += '>'
-        data_string += self.writeAnnotation()
+        if pretty == True:
+            data_string += self.writeAnnotation()
         indent_level = PopIndent(indent_level)
         return (data_string, indent_level)
 
 class pbDictionary(pbItem):
-    def writeString(self, indent_level=0):
+    def writeString(self, indent_level=0, pretty=True):
         dictionary_string = ''
         dictionary_string += '{'
         dictionary_string += WriteNewline(indent_level)
@@ -106,10 +138,10 @@ class pbDictionary(pbItem):
         else:
             dictionary_string += '\t'
             for key in keys_array:
-                write_string, indent_level = key.name.writeString(indent_level)
+                write_string, indent_level = key.writeString(indent_level, pretty)
                 dictionary_string += write_string
                 dictionary_string += ' = '
-                write_string, indent_level = self.value[key].writeString(indent_level)
+                write_string, indent_level = self.value[key].writeString(indent_level, pretty)
                 dictionary_string += write_string
                 dictionary_string += ';'
                 if key == keys_array[-1]:
@@ -119,7 +151,7 @@ class pbDictionary(pbItem):
         return (dictionary_string, indent_level)
 
 class pbArray(pbItem):
-    def writeString(self, indent_level=0):
+    def writeString(self, indent_level=0, pretty=True):
         array_string = ''
         array_string += '('
         array_string += WriteNewline(indent_level)
@@ -130,7 +162,7 @@ class pbArray(pbItem):
         else:
             array_string += '\t'
             for value in values_array:
-                write_string, indent_level = value.writeString(indent_level)
+                write_string, indent_level = value.writeString(indent_level, pretty)
                 array_string += write_string
                 if value != values_array[-1]:
                     array_string += ','
