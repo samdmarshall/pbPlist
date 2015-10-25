@@ -45,11 +45,11 @@ class pbItem(object):
     
     def writeAnnotation(self):
         output_string = ''
-        if self.annotation != None:
+        if self.annotation != None and len(self.annotation) > 0:
             output_string += ' '
-            output_string += '/* '
+            output_string += '/*'
             output_string += self.annotation
-            output_string += ' */'
+            output_string += '*/'
         return output_string
 
 class pbString(pbItem):
@@ -79,13 +79,15 @@ class pbData(pbItem):
         for hex_byte in map(ord, self.value.decode()):
             data_string += format(hex_byte, 'x')
             grouping_byte_counter += 1
+            # write a space every 4th byte
             if grouping_byte_counter == 4:
                 data_string += ' '
                 grouping_byte_counter = 0
                 grouping_line_counter += 1
+            # write a newline every 4th grouping of bytes
             if grouping_line_counter == 4:
                 data_string += WriteNewline(indent_level)
-                data_string += ' '
+                data_string += ' ' # indent an additional space to make the byte groupings line up
                 grouping_line_counter = 0
         data_string += '>'
         data_string += self.writeAnnotation()

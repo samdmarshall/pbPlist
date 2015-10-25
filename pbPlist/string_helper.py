@@ -1,6 +1,7 @@
 import string
 
 def ConvertNEXTSTEPToUnicode(hex_digit):
+    # taken from http://ftp.unicode.org/Public/MAPPINGS/VENDORS/NEXT/NEXTSTEP.TXT
     conversion = {
         "80":	"a0",	# NO-BREAK SPACE
         "81":	"c0",	# LATIN CAPITAL LETTER A WITH GRAVE
@@ -264,6 +265,7 @@ def IndexOfNextNonSpace(string_data, current_index):
     successful = False
     found_index = current_index
     string_length = len(string_data)
+    annotation_string = ''
     while found_index < string_length:
         current_char = string_data[found_index]
         if IsSpecialWhitespace(current_char) == True:
@@ -282,20 +284,32 @@ def IndexOfNextNonSpace(string_data, current_index):
                 if next_character == '/': # found a line comment "//"
                     found_index += 1
                     next_index = found_index
+                    first_pass = True
                     while next_index < string_length:
                         test_char = string_data[next_index]
                         if IsEndOfLine(test_char) == True:
                             break
+                        else:
+                            if first_pass != True:
+                                annotation_string += test_char
+                            else:
+                                first_pass = False
                         next_index += 1
                     found_index = next_index
                 elif next_character == '*': # found a block comment "/* ... */"
                     found_index += 1
                     next_index = found_index
+                    first_pass = True
                     while next_index < string_length:
                         test_char = string_data[next_index]
                         if test_char == '*' and (next_index+1 < string_length) and string_data[next_index+1] == '/':
                             next_index += 2
                             break
+                        else:
+                            if first_pass != True:
+                                annotation_string += test_char
+                            else:
+                                first_pass = False
                         next_index += 1
                     found_index = next_index
                 else:
@@ -304,4 +318,4 @@ def IndexOfNextNonSpace(string_data, current_index):
         else:
             successful = True
             break
-    return (successful, found_index)
+    return (successful, found_index, annotation_string)
