@@ -1,5 +1,3 @@
-import re
-
 import string_helper as StrParse
 import pbRoot
 import pbKey
@@ -10,6 +8,8 @@ class PBParser(object):
     def __init__(self, file_path=None):
         self.index = 0
         self.string_encoding = None
+        self.file_path = file_path
+        self.file_type = None
         try:
             fd = open(file_path, 'r')
             self.data = fd.read()
@@ -21,14 +21,27 @@ class PBParser(object):
             raise
     
     def read(self):
-        # test for encoding hint
-        if self.data[0:2] == '//':
-            # this is to try to see if we can locate the desired string encoding of the file
-            result = re.search('^// !\$\*(.+?)\*\$!', self.data)
-            if result:
-                self.string_encoding = result.group(1)
-        #now return the parse
-        return self.__readTest(True)
+        prefix = self.data[0:6]
+        if prefix == 'bplist' or prefix == '<?xml ':
+            if prefix == 'bplist':
+                self.file_type = 'binary'
+                message = 'binary plists are currently not supported!'
+                raise Exception(message)
+            if prefix == '<?xml ':
+                self.file_type = 'xml'
+            import plistlib
+            return plistlib.readPlist(self.file_path)
+        else:
+            self.file_type = 'ascii'
+            # test for encoding hint
+            if self.data[0:2] == '//':
+                # this is to try to see if we can locate the desired string encoding of the file
+                import re
+                result = re.search('^// !\$\*(.+?)\*\$!', self.data)
+                if result:
+                    self.string_encoding = result.group(1)
+            #now return the parse
+            return self.__readTest(True)
     
     def __readTest(self, requires_object=True):
         # can we parse this?

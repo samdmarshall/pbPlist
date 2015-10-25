@@ -10,12 +10,13 @@ class PBPlist(object):
         if self.__checkFile(file_path) == True:
             parser = PBParser(self.file_path)
             self.root = parser.read()
-            self.file_encoding = parser.string_encoding
+            self.string_encoding = parser.string_encoding
+            self.file_type = parser.file_type
     
     def write(self, file_path=None):
         if file_path == None:
             file_path = self.file_path
-        serializer = PBSerializer(file_path, self.file_encoding)
+        serializer = PBSerializer(file_path, self.string_encoding, self.file_type)
         serializer.write(self.root)
         
     
