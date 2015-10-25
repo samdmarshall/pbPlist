@@ -27,31 +27,19 @@ class pbItem(object):
             raise ValueError(message)
     
     def __eq__(self, other):
-        is_equal = False
-        if other != None:
-            can_compare_types = False
-            if self.type_name == 'string' or self.type_name == 'qstring':
-                if type(other) == str:
-                    is_equal = (self.value == other)
-                elif isinstance(other, pbString) or isinstance(other, pbQString):
-                    can_compare_types = (other.type_name == 'string' or other.type_name == 'qstring')
-            else:
-                can_compare_types = (other.type_name == self.type_name)
-            if can_compare_types == True:
-                is_equal = (other.value == self.value)
-        return is_equal
+        return False
     
     def __hash__(self):
-        return hash(self.value)
+        return self.value.__hash__()
         
     def __repr__(self):
-        return self.value
+        return self.value.__repr__()
     
     def __iter__(self):
-        return iter(self.value)
+        return self.value.__iter__()
     
     def __getattr__(self, attrib):
-        return getattr(self.value, attrib)
+        return self.value.__getattr__(attrib)
    
     def __str__(self):
         return self.writeString(0, False)[0]
@@ -63,10 +51,13 @@ class pbItem(object):
         self.value.__setitem__(key, value)
     
     def __len__(self):
-        return len(self.value)
+        return self.value.__len__()
     
     def __contains__(self, item):
         return self.value.__contains__(item)
+    
+    def __get__(self, obj, objtype):
+        return self.value.__get__(obj, objtype)
     
     def writeString(self, indent_level=0, pretty=True):
         message = 'This is a base class, it cannot write!'
@@ -82,6 +73,13 @@ class pbItem(object):
         return output_string
 
 class pbString(pbItem):
+    def __eq__(self, other):
+        if type(other) is str:
+            return self.value.__eq__(other)
+        elif type(other) is pbQString or type(other) is pbString:
+            return (self.value == other.value)
+        else:
+            return super(pbString, self).__eq__(other)
     def writeString(self, indent_level=0, pretty=True):
         string_string = ''
         string_string += self.value
@@ -90,6 +88,13 @@ class pbString(pbItem):
         return (string_string, indent_level)
     
 class pbQString(pbItem):
+    def __eq__(self, other):
+        if type(other) is str:
+            return self.value.__eq__(other)
+        elif type(other) is pbQString or type(other) is pbString:
+            return (self.value == other.value)
+        else:
+            return super(pbQString, self).__eq__(other)
     def writeString(self, indent_level=0, pretty=True):
         qstring_string = ''
         qstring_string += '"'
@@ -101,6 +106,13 @@ class pbQString(pbItem):
         return (qstring_string, indent_level)
         
 class pbData(pbItem):
+    def __eq__(self, other):
+        if type(other) is bytearray:
+            return self.value.__eq__(other)
+        elif type(other) is pbData:
+            return (self.value == other.value)
+        else:
+            return super(pbData, self).__eq__(other)
     def writeString(self, indent_level=0, pretty=True):
         data_string = ''
         indent_level = PushIndent(indent_level)
@@ -127,6 +139,13 @@ class pbData(pbItem):
         return (data_string, indent_level)
 
 class pbDictionary(pbItem):
+    def __eq__(self, other):
+        if type(other) is dict:
+            return self.value.__eq__(other)
+        elif type(other) is pbDictionary:
+            return (self.value == other.value)
+        else:
+            return super(pbDictionary, self).__eq__(other);
     def writeString(self, indent_level=0, pretty=True):
         dictionary_string = ''
         dictionary_string += '{'
@@ -151,6 +170,13 @@ class pbDictionary(pbItem):
         return (dictionary_string, indent_level)
 
 class pbArray(pbItem):
+    def __eq__(self, other):
+        if type(other) is list:
+            return self.value.__eq__(other)
+        elif type(other) is pbArray:
+            return (self.value == other.value)
+        else:
+            return super(pbArray, self).__eq__(other);
     def writeString(self, indent_level=0, pretty=True):
         array_string = ''
         array_string += '('

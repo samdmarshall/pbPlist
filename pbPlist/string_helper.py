@@ -189,8 +189,7 @@ def UnQuotifyString(string_data, start_index, end_index): # http://www.opensourc
                 if next_char == '\n':
                     formatted_string += '\n'
                 if next_char == 'U':
-                    index += 1
-                    starting_index = index
+                    starting_index = index + 1
                     ending_index = starting_index + 4
                     unicode_numbers = extracted_string[starting_index:ending_index]
                     for number in unicode_numbers:

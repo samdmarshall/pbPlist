@@ -1,6 +1,5 @@
 import string_helper as StrParse
 import pbRoot
-import pbKey
 import pbItem
 
 class PBParser(object):
@@ -149,7 +148,7 @@ class PBParser(object):
         return data_object
     
     def __parseArray(self):
-        array_objects = []
+        array_objects = list()
         self.index += 1  # move past the "("
         start_index = self.index
         new_object = self.__readTest(False)

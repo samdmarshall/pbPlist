@@ -1,8 +1,5 @@
 import sys
 
-import pbRoot
-import pbItem
-
 class PBSerializer(object):
     
     def __init__(self, file_path=None, encoding=None, file_type=None):
