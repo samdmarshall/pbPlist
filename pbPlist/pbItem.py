@@ -39,7 +39,7 @@ class pbItem(object):
     def __repr__(self):
         return self.value
     
-    def writeString(self):
+    def writeString(self, indent_level=0):
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
     
@@ -53,14 +53,14 @@ class pbItem(object):
         return output_string
 
 class pbString(pbItem):
-    def writeString(self, indent_level):
+    def writeString(self, indent_level=0):
         string_string = ''
         string_string += self.value
         string_string += self.writeAnnotation()
         return (string_string, indent_level)
     
 class pbQString(pbItem):
-    def writeString(self, indent_level):
+    def writeString(self, indent_level=0):
         qstring_string = ''
         qstring_string += '"'
         for character in self.value:
