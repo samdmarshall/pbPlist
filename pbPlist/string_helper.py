@@ -189,6 +189,7 @@ def UnQuotifyString(string_data, start_index, end_index): # http://www.opensourc
                 if next_char == '\n':
                     formatted_string += '\n'
                 if next_char == 'U':
+                    index += 1
                     starting_index = index
                     ending_index = starting_index + 4
                     unicode_numbers = extracted_string[starting_index:ending_index]
@@ -197,7 +198,6 @@ def UnQuotifyString(string_data, start_index, end_index): # http://www.opensourc
                         if IsHexNumber(number) == False:
                             message = 'Invalid unicode sequence on line '+str(LineNumberForIndex(string_data, start_index+index))
                             raise Exception(message)
-                    print(unicode_numbers)
                     formatted_string += unichr(int(unicode_numbers, 16))
                 if IsOctalNumber(next_char) == True: # https://twitter.com/Catfish_Man/status/658014170055507968
                     starting_index = index
