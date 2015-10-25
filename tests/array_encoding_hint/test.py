@@ -9,6 +9,12 @@ try:
     test_input.write(output_path)
     test_output = pbPlist.PBPlist(output_path)
     
+    if not len(test_input.root) == 0:
+        raise Exception
+        
+    if not len(test_output.root) == 0:
+        raise Exception
+    
     if not (len(test_input.root) == len(test_output.root)):
         raise Exception
 except:
