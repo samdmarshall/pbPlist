@@ -63,20 +63,19 @@ class PBParser(object):
     def __parse(self, requires_object=True):
         starting_character = self.data[self.index]
         if starting_character == '{':
-            # parse dictionary print('parsing dictionary')
+            # parse dictionary
             return pbItem.pbItemResolver(self.__parseDict(), 'dictionary')
         elif starting_character == '(':
-            # parse array print('parsing array')
+            # parse array
             return pbItem.pbItemResolver(self.__parseArray(), 'array')
         elif starting_character == '<':
-            # parse data print('parsing data')
+            # parse data
             return pbItem.pbItemResolver(self.__parseData(), 'data')
         elif starting_character == '\'' or starting_character == '\"':
-            # parse quoted string print('parsing quoted string')
+            # parse quoted string
             return pbItem.pbItemResolver(self.__parseQuotedString(), 'qstring')
         elif StrParse.IsValidUnquotedStringCharacter(starting_character) == True:
             # parse unquoted string
-            # print('parsing unquoted string')
             return pbItem.pbItemResolver(self.__parseUnquotedString(), 'string')
         else:
             if requires_object == True:

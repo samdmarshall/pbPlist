@@ -13,7 +13,6 @@ def WriteNewline(level=0):
     return output
 
 class pbItem(object):
-    indentLevel = 0
     
     def __init__(self, value=None, type_name=None, annotation=None):
         if value != None and type_name != None:
@@ -31,10 +30,11 @@ class pbItem(object):
         is_equal = False
         if other != None:
             can_compare_types = False
-            if type(other) == str:
-                other = pbItemResolver(other, 'qstring')
             if self.type_name == 'string' or self.type_name == 'qstring':
-                can_compare_types = (other.type_name == 'string' or other.type_name == 'qstring')
+                if type(other) == str:
+                    is_equal = (self.value == other)
+                elif isinstance(other, pbString) or isinstance(other, pbQString):
+                    can_compare_types = (other.type_name == 'string' or other.type_name == 'qstring')
             else:
                 can_compare_types = (other.type_name == self.type_name)
             if can_compare_types == True:
