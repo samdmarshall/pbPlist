@@ -1,4 +1,5 @@
 import collections
+import string
 
 import pbKey
 
@@ -10,6 +11,8 @@ class pbRoot(collections.MutableMapping):
         self.update(dict(*args, **kwargs))  # use the free update to set keys
 
     def __getitem__(self, key):
+        if type(key) == type(string):
+            key = pbKey.pbKey(key, key)
         fetched_item = None
         if key in self.key_storage:
             key_value = self.__keytransform__(key)
@@ -17,12 +20,16 @@ class pbRoot(collections.MutableMapping):
         return fetched_item
 
     def __setitem__(self, key, value):
+        if type(key) == type(string):
+            key = pbKey.pbKey(key, key)
         key_value = self.__keytransform__(key)
         if key not in self.key_storage:
             self.key_storage.add(key)
         self.store[key_value] = value
 
     def __delitem__(self, key):
+        if type(key) == type(string):
+            key = pbKey.pbKey(key, key)
         key_value = self.__keytransform__(key)
         if key in self.key_storage:
             self.key_storage.remove(key)
