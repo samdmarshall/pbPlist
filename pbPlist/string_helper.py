@@ -141,6 +141,22 @@ def IsHexNumber(character):
     hex_digits = set(string.hexdigits)
     return set(character).issubset(hex_digits)
 
+def SanitizeCharacter(character):
+    escaped_characters = {
+        '\a': '\\a',
+        '\b': '\\b',
+        '\f': '\\f',
+        '\n': '\\n',
+        '\r': '\\r',
+        '\t': '\\t',
+        '\v': '\\v',
+        '\"': '\\"',
+    }
+    if character in escaped_characters.keys():
+        return escaped_characters[character]
+    else:
+        return character
+
 def UnQuotifyString(string_data, start_index, end_index):
     formatted_string = ''
     extracted_string = string_data[start_index:end_index]

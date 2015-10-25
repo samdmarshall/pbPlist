@@ -10,7 +10,7 @@ class pbKey(object):
     
     def __eq__(self, other):
         is_equal = False
-        if isinstance(other, pbItem):
+        if isinstance(other, pbKey):
             is_equal = (other.name == self.name)
         return is_equal
     

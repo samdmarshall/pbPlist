@@ -29,5 +29,6 @@ class PBSerializer(object):
         if self.string_encoding != None:
             fd.write('// !$*'+self.string_encoding+'*$!\n')
         if obj != None:
-            fd.write(obj.writeString())
+            write_string, indent_level = obj.writeString(0)
+            fd.write(write_string)
         fd.close()

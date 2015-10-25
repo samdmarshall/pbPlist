@@ -1,4 +1,19 @@
+import string_helper as StrParse
+
+def PushIndent(indent_level):
+    return indent_level + 1
+
+def PopIndent(indent_level):
+    return indent_level - 1
+
+def WriteNewline(level=0):
+    output = '\n'
+    for index in range(level):
+        output += '\t'
+    return output
+
 class pbItem(object):
+    indentLevel = 0
     
     def __init__(self, value=None, type_name=None, annotation=None):
         if value != None and type_name != None:
@@ -38,54 +53,90 @@ class pbItem(object):
         return output_string
 
 class pbString(pbItem):
-    def writeString(self):
+    def writeString(self, indent_level):
         string_string = ''
         string_string += self.value
         string_string += self.writeAnnotation()
-        return string_string
+        return (string_string, indent_level)
     
 class pbQString(pbItem):
-    def writeString(self):
+    def writeString(self, indent_level):
         qstring_string = ''
         qstring_string += '"'
-        qstring_string += self.value
+        for character in self.value:
+            qstring_string += StrParse.SanitizeCharacter(character)
         qstring_string += '"'
         qstring_string += self.writeAnnotation()
-        return qstring_string
+        return (qstring_string, indent_level)
         
 class pbData(pbItem):
-    def writeString(self):
+    def writeString(self, indent_level=0):
         data_string = ''
+        indent_level = PushIndent(indent_level)
         data_string += '<'
+        grouping_byte_counter = 0
+        grouping_line_counter = 0
         for hex_byte in map(ord, self.value.decode()):
             data_string += format(hex_byte, 'x')
+            grouping_byte_counter += 1
+            if grouping_byte_counter == 4:
+                data_string += ' '
+                grouping_byte_counter = 0
+                grouping_line_counter += 1
+            if grouping_line_counter == 4:
+                data_string += WriteNewline(indent_level)
+                data_string += ' '
+                grouping_line_counter = 0
         data_string += '>'
         data_string += self.writeAnnotation()
-        return data_string
+        indent_level = PopIndent(indent_level)
+        return (data_string, indent_level)
 
 class pbDictionary(pbItem):
-    def writeString(self):
+    def writeString(self, indent_level=0):
         dictionary_string = ''
-        dictionary_string += '{\n'
-        for key in self.value:
+        dictionary_string += '{'
+        dictionary_string += WriteNewline(indent_level)
+        indent_level = PushIndent(indent_level)
+        keys_array = list(self.value.keys())
+        if len(keys_array) == 0:
+            indent_level = PopIndent(indent_level)
+        else:
             dictionary_string += '\t'
-            dictionary_string += key.name.writeString()
-            dictionary_string += ' = '
-            dictionary_string += self.value[key].writeString()
-            dictionary_string += ';\n'
-        dictionary_string += '}\n'
-        return dictionary_string
+            for key in keys_array:
+                write_string, indent_level = key.name.writeString(indent_level)
+                dictionary_string += write_string
+                dictionary_string += ' = '
+                write_string, indent_level = self.value[key].writeString(indent_level)
+                dictionary_string += write_string
+                dictionary_string += ';'
+                if key == keys_array[-1]:
+                    indent_level = PopIndent(indent_level)
+                dictionary_string += WriteNewline(indent_level)
+        dictionary_string += '}'
+        return (dictionary_string, indent_level)
 
 class pbArray(pbItem):
-    def writeString(self):
+    def writeString(self, indent_level=0):
         array_string = ''
-        array_string += '(\n'
-        for value in self.value:
+        array_string += '('
+        array_string += WriteNewline(indent_level)
+        indent_level = PushIndent(indent_level)
+        values_array = list(self.value)
+        if len(values_array) == 0:
+            indent_level = PopIndent(indent_level)
+        else:
             array_string += '\t'
-            array_string += value.writeString()
-            array_string += ',\n'
-        array_string += ')\n'
-        return array_string
+            for value in values_array:
+                write_string, indent_level = value.writeString(indent_level)
+                array_string += write_string
+                if value != values_array[-1]:
+                    array_string += ','
+                else:
+                    indent_level = PopIndent(indent_level)
+                array_string += WriteNewline(indent_level)
+        array_string += ')'
+        return (array_string, indent_level)
 
 KnownTypes = {
     'string': pbString,
