@@ -31,4 +31,3 @@ class PBSerializer(object):
         if obj != None:
             write_string, indent_level = obj.writeString(0)
             fd.write(write_string)
-        fd.close()
