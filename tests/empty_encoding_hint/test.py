@@ -9,6 +9,14 @@ try:
     test_input.write(output_path)
     test_output = pbPlist.PBPlist(output_path)
     
-    raise Exception
+    if not test_input.string_encoding == 'UTF8':
+        raise Exception
+    
+    if not test_output.string_encoding == 'UTF8':
+        raise Exception
+    
+    if not test_input.string_encoding == test_output.string_encoding:
+        raise Exception
+    
 except:
     raise
