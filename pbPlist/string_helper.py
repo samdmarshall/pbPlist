@@ -158,7 +158,7 @@ def SanitizeCharacter(character):
     else:
         return character
 
-def UnQuotifyString(string_data, start_index, end_index):
+def UnQuotifyString(string_data, start_index, end_index): # http://www.opensource.apple.com/source/CF/CF-744.19/CFOldStylePList.c See `getSlashedChar()`
     formatted_string = ''
     extracted_string = string_data[start_index:end_index]
     string_length = len(extracted_string)
@@ -199,7 +199,7 @@ def UnQuotifyString(string_data, start_index, end_index):
                             raise Exception(message)
                     print(unicode_numbers)
                     formatted_string += unichr(int(unicode_numbers, 16))
-                if IsOctalNumber(next_char) == True:
+                if IsOctalNumber(next_char) == True: # https://twitter.com/Catfish_Man/status/658014170055507968
                     starting_index = index
                     ending_index = starting_index + 1
                     for oct_index in range(3):
@@ -245,9 +245,13 @@ def IsSpecialWhitespace(character):
     value = ord(character)
     return (value >= 9 and value <= 13) # tab, newline, vt, form feed, carriage return
 
+def IsUnicodeSeparator(character):
+    value = ord(character)
+    return (value == 8232 or value == 8233)
+
 def IsRegularWhitespace(character):
     value = ord(character)
-    return (value == 32 or value == 8232 or value == 8233) # space and Unicode line sep, para sep
+    return (value == 32 or IsUnicodeSeparator(character)) # space and Unicode line sep, para sep
 
 def IsDataFormattingWhitespace(character):
     value = ord(character)
@@ -258,8 +262,7 @@ def IsNewline(character):
     return (value == 13 or value == 10)
 
 def IsEndOfLine(character):
-    value = ord(character)
-    return (IsNewline(character) or value == 8232 or value == 8233)
+    return (IsNewline(character) or IsUnicodeSeparator(character))
 
 def IndexOfNextNonSpace(string_data, current_index):
     successful = False
