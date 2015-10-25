@@ -176,20 +176,22 @@ class PBParser(object):
             can_parse, self.index, new_object.annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
             key_object = new_object
             current_char = self.data[self.index]
+            value_object = None
             if current_char == '=':
                 self.index += 1
-                new_object = self.__readTest(True)
+                value_object = self.__readTest(True)
             elif current_char == ';':
                 # this is for strings files where the key and the value may be the same thing
                 self.index += 1
-                new_object = pbItem.pbItem(new_object, annotation)
+                value_object = pbItem.pbItemResolver(new_object.value, new_object.type_name)
+                value_object.annotation = new_object.annotation
             else:
                 message = 'Missing ";" or "=" on line '+str(StrParse.LineNumberForIndex(self.data, self.index))
                 raise Exception(message)
             can_parse, self.index, annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
-            if new_object.annotation == None: # this is to prevent losing the annotation of the key when parsing strings dicts
-                new_object.annotation = annotation 
-            dictionary[key_object] = new_object
+            if value_object.annotation == None: # this is to prevent losing the annotation of the key when parsing strings dicts
+                value_object.annotation = annotation 
+            dictionary[key_object] = value_object
             current_char = self.data[self.index]
             if current_char == ';':
                 self.index += 1 # advancing to the next key
