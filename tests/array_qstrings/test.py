@@ -36,5 +36,4 @@ try:
         raise Exception
     
 except:
-    print('Test failure!')
     raise

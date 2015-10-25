@@ -18,5 +18,4 @@ try:
     if not (len(test_input.root) == len(test_output.root)):
         raise Exception
 except:
-    print('Test failure!')
     raise

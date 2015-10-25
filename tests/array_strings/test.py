@@ -35,5 +35,4 @@ try:
     if not (input_items == output_items):
         raise Exception
 except:
-    print('Test failure!')
     raise
