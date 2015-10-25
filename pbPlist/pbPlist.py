@@ -15,7 +15,7 @@ class PBPlist(object):
     def write(self, file_path=None):
         if file_path == None:
             file_path = self.file_path
-        serializer = PBSerializer(file_path)
+        serializer = PBSerializer(file_path, self.file_encoding)
         serializer.write(self.root)
         
     
