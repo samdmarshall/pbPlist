@@ -47,7 +47,7 @@ class pbItem(object):
         return self.value.__getattr__(attrib)
    
     def __str__(self):
-        return self.writeString(0, False)[0]
+        return self.writeStringRep(0, False)[0]
 
     def __getitem__(self, key):
         return self.value.__getitem__(key)
@@ -63,6 +63,9 @@ class pbItem(object):
     
     def __get__(self, obj, objtype):
         return self.value.__get__(obj, objtype)
+    
+    def writeStringRep(self, indent_level=0, pretty=True):
+        return self.writeString(indent_level, pretty)
     
     def writeString(self, indent_level=0, pretty=True):
         message = 'This is a base class, it cannot write!'
@@ -86,11 +89,17 @@ class pbString(pbItem):
         return (string_string, indent_level)
     
 class pbQString(pbItem):
+    def writeStringRep(self, indent_level=0, pretty=True):
+        qstring_string = ''
+        for character in self.value:
+            qstring_string += StrParse.SanitizeCharacter(character)
+        return (qstring_string, indent_level)
+    
     def writeString(self, indent_level=0, pretty=True):
         qstring_string = ''
         qstring_string += '"'
-        for character in self.value:
-            qstring_string += StrParse.SanitizeCharacter(character)
+        string_rep, indent_level = self.writeStringRep(indent_level, pretty)
+        qstring_string += string_rep
         qstring_string += '"'
         if pretty == True:
             qstring_string += self.writeAnnotation()
