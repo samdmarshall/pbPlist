@@ -137,10 +137,9 @@ class pbData(pbItem):
 class pbDictionary(pbItem):
     def nativeType(self):
         new_value = dict()
-        for key in self.value.keys():
-            value = self.value.get(key, None)
-            if value:
-                new_value[str(key)] = value.nativeType()
+        for key in self.keys():
+            value = self[key]
+            new_value[str(key)] = value.nativeType()
         return new_value
     def writeString(self, indent_level=0, pretty=True):
         dictionary_string = ''
