@@ -16,7 +16,6 @@ for subdir, dirs, files in os.walk(tests_path):
             try:
                 execfile(test_case_path, {"TEST_DIRECTORY": test_case_directory})
                 test_success += 1
-                print(u'\u2705 Test Passed!')
             except:
                 test_failures +=1
                 print(u'\U0001F6AB Test Failed!')
