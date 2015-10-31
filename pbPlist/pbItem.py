@@ -70,7 +70,10 @@ class pbItem(object):
     def writeString(self, indent_level=0, pretty=True):
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
-    
+        
+    def nativeType(self):
+        return self.value
+        
     def writeAnnotation(self):
         output_string = ''
         if self.annotation != None and len(self.annotation) > 0:
@@ -132,6 +135,13 @@ class pbData(pbItem):
         return (data_string, indent_level)
 
 class pbDictionary(pbItem):
+    def nativeType(self):
+        new_value = dict()
+        for key in self.value.keys():
+            value = self.value.get(key, None)
+            if value:
+                new_value[str(key)] = value.nativeType()
+        return new_value
     def writeString(self, indent_level=0, pretty=True):
         dictionary_string = ''
         dictionary_string += '{'
@@ -156,6 +166,11 @@ class pbDictionary(pbItem):
         return (dictionary_string, indent_level)
 
 class pbArray(pbItem):
+    def nativeType(self):
+        new_value = list()
+        for item in self.value:
+            new_value.append(item.nativeType())
+        return new_value
     def writeString(self, indent_level=0, pretty=True):
         array_string = ''
         array_string += '('
