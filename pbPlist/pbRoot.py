@@ -2,11 +2,27 @@ import collections
 
 import pbItem
 
+def StringCmp(obj1, obj2):
+    if obj1 > obj2:
+        return 1
+    elif obj1 == obj2:
+        return 0
+    else:
+        return -1
+
+def KeySorter(obj1, obj2):
+    if str(obj1) == 'isa':
+        return -1
+    elif str(obj2) == 'isa':
+        return 1
+    else:
+        return StringCmp(str(obj1), str(obj2))
+
 class pbRoot(collections.MutableMapping):
 
     def __init__(self, *args, **kwargs):
         self.store = dict()
-        self.key_storage = set()
+        self.key_storage = list()
         self.update(dict(*args, **kwargs))  # use the free update to set keys
 
     def __internalKeyCheck(self, key):
@@ -20,7 +36,7 @@ class pbRoot(collections.MutableMapping):
 
     def __setitem__(self, key, value):
         if key not in self.key_storage:
-            self.key_storage.add(self.__internalKeyCheck(key))
+            self.key_storage.append(self.__internalKeyCheck(key))
         self.store[key] = value
 
     def __delitem__(self, key):
@@ -51,7 +67,7 @@ class pbRoot(collections.MutableMapping):
     
     def sortedKeys(self):
         unsorted_keys = self.key_storage
-        sorted_keys = sorted(unsorted_keys)
+        sorted_keys = sorted(unsorted_keys, cmp=KeySorter)
         can_sort = False
         if len(sorted_keys) > 0:
             all_dictionaries = all((type(self[key].value) is dict or type(self[key].value) is pbRoot) for key in unsorted_keys)
