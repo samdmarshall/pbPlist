@@ -48,3 +48,16 @@ class pbRoot(collections.MutableMapping):
             return key.value
         else:
             return key
+    
+    def sortedKeys(self):
+        unsorted_keys = self.key_storage
+        sorted_keys = sorted(unsorted_keys)
+        can_sort = False
+        if len(sorted_keys) > 0:
+            all_dictionaries = all((type(self[key].value) is dict or type(self[key].value) is pbRoot) for key in unsorted_keys)
+            if all_dictionaries:
+                can_sort = all(self[key].get('isa', None) != None for key in unsorted_keys)
+                if can_sort:
+                    sorted_keys = sorted(unsorted_keys, key=lambda k: str(self[k]['isa']))
+        return (can_sort, sorted_keys)
+            

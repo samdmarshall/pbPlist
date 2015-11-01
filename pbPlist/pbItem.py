@@ -6,10 +6,16 @@ def PushIndent(indent_level):
 def PopIndent(indent_level):
     return indent_level - 1
 
-def WriteNewline(level=0):
-    output = '\n'
+def WriteIndent(level=0):
+    output = ''
     for index in range(level):
         output += '\t'
+    return output
+
+def WriteNewline(level=0, indent=True):
+    output = '\n'
+    if indent:
+        output += WriteIndent(level)
     return output
 
 class pbItem(object):
@@ -144,23 +150,44 @@ class pbDictionary(pbItem):
     def writeString(self, indent_level=0, pretty=True):
         dictionary_string = ''
         dictionary_string += '{'
-        dictionary_string += WriteNewline(indent_level)
+        has_sorted_keys, keys_array = self.value.sortedKeys()
+        dictionary_string += WriteNewline(indent_level, not has_sorted_keys)
         indent_level = PushIndent(indent_level)
-        keys_array = list(self.value.keys())
+        previous_value_type = None
         if len(keys_array) == 0:
             indent_level = PopIndent(indent_level)
         else:
-            dictionary_string += '\t'
+            if not has_sorted_keys:
+                dictionary_string += '\t'
             for key in keys_array:
+                if has_sorted_keys:
+                    current_value_type = str(self.value[key]['isa'])
+                    if previous_value_type != current_value_type:
+                        if previous_value_type != None:
+                            dictionary_string += '/* End '+previous_value_type+' section */'
+                            dictionary_string += WriteNewline(indent_level, False)
+                        previous_value_type = current_value_type
+                        dictionary_string += '\n/* Begin '+current_value_type+' section */'
+                        dictionary_string += WriteNewline(indent_level)
+                    else:
+                        dictionary_string += WriteIndent(indent_level)
                 write_string, indent_level = key.writeString(indent_level, pretty)
                 dictionary_string += write_string
                 dictionary_string += ' = '
                 write_string, indent_level = self.value[key].writeString(indent_level, pretty)
                 dictionary_string += write_string
                 dictionary_string += ';'
-                if key == keys_array[-1]:
+                should_indent = True
+                is_last_key = (key == keys_array[-1])
+                if is_last_key:
+                    if has_sorted_keys:
+                        dictionary_string += WriteNewline(indent_level, False)
+                        dictionary_string += '/* End '+previous_value_type+' section */'
                     indent_level = PopIndent(indent_level)
-                dictionary_string += WriteNewline(indent_level)
+                else:
+                    if has_sorted_keys:
+                        should_indent = False
+                dictionary_string += WriteNewline(indent_level, should_indent)
         dictionary_string += '}'
         return (dictionary_string, indent_level)
 
