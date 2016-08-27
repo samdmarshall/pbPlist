@@ -34,3 +34,4 @@ output.plist
 /htmlcov
 /.tox
 /.coverage
+/lint_output.txt

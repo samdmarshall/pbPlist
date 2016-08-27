@@ -29,3 +29,4 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from . import pbPlist
+__version__ = '1.0'
