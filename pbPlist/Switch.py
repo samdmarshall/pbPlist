@@ -1,7 +1,7 @@
 # Copyright (c) 2016, Samantha Marshall (http://pewpewthespells.com)
 # All rights reserved.
 #
-# https://github.com/samdmarshall/pbPlist
+# https://github.com/samdmarshall/pylocalizer
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -28,28 +28,24 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-from .pbParser     import PBParser
-from .pbSerializer import PBSerializer
+# Original code taken from http://code.activestate.com/recipes/410692/
 
-class PBPlist(object):
+class Switch(object):
+    def __init__(self, value):
+        self.value = value
+        self.fall = False
 
-    def __init__(self, file_path):
-        self.root = None
-        if self.__checkFile(file_path) is True:
-            parser = PBParser(self.file_path)
-            self.root = parser.read()
-            self.string_encoding = parser.string_encoding
-            self.file_type = parser.file_type
+    def __iter__(self):
+        """Return the match method once, then stop"""
+        yield self.match
+        raise StopIteration # pragma: no cover
 
-    def write(self, file_path=None):
-        if file_path is None:
-            file_path = self.file_path
-        serializer = PBSerializer(file_path, self.string_encoding, self.file_type)
-        serializer.write(self.root)
-
-    def __checkFile(self, file_path):
-        can_access_file = os.path.exists(file_path)
-        if can_access_file is True:
-            self.file_path = file_path
-        return can_access_file
+    def match(self, *args):
+        """Indicate whether or not to enter a case suite"""
+        result = False
+        if self.fall or not args:
+            result = True
+        elif self.value in args: # changed for v1.5, see below
+            self.fall = True
+            result = True
+        return result

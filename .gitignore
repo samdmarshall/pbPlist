@@ -31,3 +31,6 @@ DerivedData
 
 ### Test Output ###
 output.plist
+/htmlcov
+/.tox
+/.coverage
