@@ -32,7 +32,7 @@ from setuptools import setup
 
 setup(
     name = 'pbPlist',
-    version = '1.0.1',
+    version = '1.0.2',
     description = 'Property List Parser and Serializer. Supports XML, Binary, and NeXTSTEP Property Lists.',
     url = 'https://github.com/samdmarshall/pbPlist',
     author = 'Samantha Marshall',
