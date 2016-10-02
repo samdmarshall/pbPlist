@@ -112,6 +112,25 @@ class pbPlistTestCases(unittest.TestCase):
 
         self.assertEqual(input_items, output_items)
 
+    def test_array_mixed(self):
+        test_input, test_output = readAndWritefile('array_mixed')
+
+        item_one = ''
+        item_two = u'testing'
+
+        input_items = test_input.root
+        self.assertEqual(input_items[0], item_one)
+        self.assertEqual(input_items[1], item_two)
+
+        output_items = test_output.root
+        self.assertEqual(output_items[0], item_one)
+        self.assertEqual(output_items[1], item_two)
+
+        self.assertEqual(input_items[0], output_items[0])
+        self.assertEqual(input_items[1], output_items[1])
+
+        self.assertEqual(input_items, output_items)
+
     def test_data_encoding_hint(self):
         test_input, test_output = readAndWritefile('data_encoding_hint')
 

@@ -234,7 +234,7 @@ class PBParser(object):
         self.index += 1  # move past the "("
         start_index = self.index
         new_object = self.__readTest(False)
-        while new_object:
+        while new_object is not None:
             can_parse, self.index, new_object.annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
             _can_parse = can_parse # pylint: disable=unused-variable
             array_objects.append(new_object)
