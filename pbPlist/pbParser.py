@@ -66,7 +66,7 @@ def OpenFileWithEncoding(file_path, encoding):
 
 if sys.version_info < (3, 0):
     def OpenFile(file_path):
-        return open(file_path, 'br')
+        return open(file_path, 'rb')
 else:
     def OpenFile(file_path):
         return open(file_path, 'br')
