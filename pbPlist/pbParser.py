@@ -66,10 +66,10 @@ def OpenFileWithEncoding(file_path, encoding):
 
 if sys.version_info < (3, 0):
     def OpenFile(file_path):
-        return open(file_path, 'r')
+        return open(file_path, 'br')
 else:
     def OpenFile(file_path):
-        return open(file_path, 'r', errors='ignore')
+        return open(file_path, 'br')
 
 class PBParser(object):
 
