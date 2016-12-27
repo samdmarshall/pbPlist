@@ -61,6 +61,7 @@ command_gem = CheckCommand.new("gem")
 command_pip2 = CheckCommand.new("pip")
 command_pip3 = CheckCommand.new("pip3")
 command_bundler = CheckCommand.new("bundle")
+command_pyenv = CheckCommand.new("pyenv")
 
 
 task :check do
@@ -75,6 +76,7 @@ task :check do
         command_pip2,
         command_pip3,
         command_bundler,
+        command_pyenv,
     ]
     for command in commands do
         path = `command -v #{command.name} 2> /dev/null`
@@ -209,6 +211,9 @@ task :setup do
 	sh "#{command_bundler.name} install"
 	
 	sh "#{command_pip2.name} install --requirement install_requirements.txt"
+
+	sh "#{command_pyenv.name} install 2.7.10 3.5.0"
+	sh "#{command_pyenv.name} local 2.7.10 3.5.0"
 end
 
 task :ci => [:setup, :check,  :lint, :test, :report, :danger] do
