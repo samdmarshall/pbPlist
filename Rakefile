@@ -212,8 +212,8 @@ task :setup do
 	
 	sh "#{command_pip2.name} install --requirement install_requirements.txt"
 
-	sh "#{command_pyenv.name} install 2.7.10"
-	sh "#{command_pyenc.name} install 3.5.0"
+	sh "#{command_pyenv.name} install 2.7.10 --force"
+	sh "#{command_pyenc.name} install 3.5.0 --force"
 	sh "#{command_pyenv.name} local 2.7.10 3.5.0"
 end
 
