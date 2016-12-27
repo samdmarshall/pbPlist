@@ -6,9 +6,8 @@ machine:
 
 dependencies:
   override:
-    - make install-deps
-    - pyenv local 2.7.10 3.5.0
+    - rake setup
 
 test:
   override:
-    - make ci
+    - rake ci
