@@ -209,7 +209,6 @@ task :setup do
 	sh "#{command_bundler.name} install"
 	
 	sh "#{command_pip2.name} install --requirement install_requirements.txt"
-	sh "#{command_pip3.name} install --requirement install_requirements.txt"
 end
 
 task :ci => [:setup, :check,  :lint, :test, :report, :danger] do
