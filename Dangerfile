@@ -6,7 +6,7 @@
 @SDM_DANGER_BIG_PR_LINES = 25
 
 # set the files to watch and warn about if there are changes made
-@SDM_DANGER_BUILD_FILES = ['Makefile', 'Gemfile', 'Dangerfile', 'circle.yml', '.codeclimate.yml', 'tox.ini', 'pylintrc']
+@SDM_DANGER_BUILD_FILES = ['Rakefile', 'Gemfile', 'Dangerfile', 'circle.yml', '.codeclimate.yml', 'tox.ini', 'pylintrc', 'install_requirements.txt']
 
 # set the files to watch and warn about if there are 
 @SDM_DANGER_INSTALL_REQUIREMENTS_FILES = ['requirements.txt', 'setup.py']
@@ -27,4 +27,4 @@
 ]
 
 # Run the shared Dangerfile with these settings
-danger.import_dangerfile "samdmarshall/danger"
+danger.import_dangerfile(github: 'samdmarshall/danger')
