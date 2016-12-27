@@ -217,7 +217,7 @@ task :setup do
 	sh "#{command_pyenv.name} local 2.7.10 3.5.0"
 end
 
-task :ci => [:setup, :check,  :lint, :test, :report, :danger] do
+task :ci => [:check,  :lint, :test, :report, :danger] do
 	if ENV["CIRCLE_ARTIFACTS"]
 		FileUtils.cp_r("htmlcov/", ENV["CIRCLE_ARTIFACTS"])
 		FileUtils.cp_r("#{lint_record}", ENV["CIRCLE_ARTIFACTS"])
