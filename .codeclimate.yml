@@ -1,0 +1,30 @@
+engines:
+  radon:
+    enabled: true
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+    exclude_fingerprints:
+  FIXME:
+    enabled: true
+
+ratings:
+  paths:
+  - pbPlist/
+
+exclude_paths:
+- tests/
+- tools/
+- "*.md"
+- "*.yml"
+- Rakefile
+- Dangerfile
+- Gemfile
+- LICENSE
+- pyc.py
+- contributing/
+- docs/
+- setup.py

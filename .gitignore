@@ -36,3 +36,5 @@ output.plist
 /.coverage
 /lint_output.txt
 /installed_files.txt
+
+.python-version

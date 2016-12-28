@@ -249,6 +249,13 @@ class pbPlistTestCases(unittest.TestCase):
         self.assertEqual(test_output.string_encoding, 'UTF8')
         self.assertEqual(test_input.string_encoding, test_output.string_encoding)
 
+    def test_bom_utf16(self):
+        test_directory_path = os.path.join(test_directory_root, 'bom/utf-16')
+        test_strings_path = os.path.join(test_directory_path, 'Localizable.strings')
+        
+        test_input = pbPlist.PBPlist(test_strings_path)
+        self.assertEqual(len(test_input.root.keys()), 109)
+
 if __name__ == '__main__':
     testsuite = unittest.TestLoader()
     testsuite.addTest(pbPlistTestCases)

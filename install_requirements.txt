@@ -1,0 +1,6 @@
+biplist == 1.0.1
+
+coverage
+tox
+codeclimate-test-reporter
+pylint
