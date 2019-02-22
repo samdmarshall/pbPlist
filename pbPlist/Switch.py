@@ -38,7 +38,6 @@ class Switch(object):
     def __iter__(self):
         """Return the match method once, then stop"""
         yield self.match
-        raise StopIteration # pragma: no cover
 
     def match(self, *args):
         """Indicate whether or not to enter a case suite"""
