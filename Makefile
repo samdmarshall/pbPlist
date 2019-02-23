@@ -103,7 +103,7 @@ DISPLAY_SEPARATOR := $(PRINTF) "%*.s\n" 80 " " | $(TR) ' ' '='
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
 pipthreeinstall = @$(PIP3_CMD) install $1
-geminstall = @$(GEM) install $1 --user
+geminstall = @$(GEM) install $1
 
 pyenv_exec = @$(PYENV_CMD) $1 $2
 
@@ -210,13 +210,12 @@ endif
 
 danger:
 	@$(PRINTF) "Running danger "
-ifdef CIRCLECI_DANGER_GITHUB_API_TOKEN
+ifdef DANGER_GITHUB_API_TOKEN
 	@$(PRINTF) "(PR)... \n"
-	@export DANGER_GITHUB_API_TOKEN=$(value CIRCLECI_DANGER_GITHUB_API_TOKEN)
-	@$(DANGER) --verbose
+	@bundle exec danger --verbose
 else
 	@$(PRINTF) "(local)... \n"
-	@$(DANGER) local --verbose
+	@bundle exec danger local --verbose
 endif
 	@$(DISPLAY_SEPARATOR)
 

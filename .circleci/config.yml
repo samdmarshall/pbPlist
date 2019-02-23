@@ -27,7 +27,7 @@ jobs:
       - image: circleci/ruby
     steps:
       - checkout
-      - run: make install-gems
+      - run: sudo make install-gems
       - run: make danger
 
 workflows:
