@@ -14,13 +14,13 @@ jobs:
       - checkout
       - run: make ci || make report
       - store_test_results:
-        path: htmlcov/
+          path: htmlcov/
       - store_artifacts:
-        path: htmlcov/
+          path: htmlcov/
       - store_artifacts:
-        path: lint_output.txt
+          path: lint_output.txt
       - store_artifacts:
-        path: installed_files.txt
+          path: installed_files.txt
   danger:
     docker:
       - image: circleci/ruby
