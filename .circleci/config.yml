@@ -7,6 +7,8 @@ jobs:
     steps:
       - checkout
       - run: make build
+      - store_artifacts:
+          path: installed_files.txt
   test:
     docker:
       - image: circleci/python:3.7.2
@@ -20,15 +22,13 @@ jobs:
           path: htmlcov/
       - store_artifacts:
           path: lint_output.txt
-      - store_artifacts:
-          path: installed_files.txt
   danger:
     docker:
       - image: circleci/ruby
     steps:
       - checkout
       - run: sudo make install-gems
-      - run: make danger
+      - run: sudo make danger
 
 workflows:
   version: 2
