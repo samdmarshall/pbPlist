@@ -113,7 +113,7 @@ install-deps:
 
 install-gems:
 	$(call geminstall,"bundler")
-	$(call bundle)
+	bundle install
 	@$(DISPLAY_SEPARATOR)
 
 # ---
