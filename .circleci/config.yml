@@ -18,8 +18,12 @@ jobs:
       - run: make ci
       - store_test_results:
           path: htmlcov/
+      - store_test_results:
+          path: coverage.xml
       - store_artifacts:
           path: htmlcov/
+      - store_artifacts:
+          path: coverage.xml
       - store_artifacts:
           path: lint_output.txt
   danger:
@@ -27,8 +31,8 @@ jobs:
       - image: circleci/ruby
     steps:
       - checkout
-      - run: sudo make install-gems
-      - run: sudo make danger
+      - run: bundle install
+      - run: make danger
 
 workflows:
   version: 2

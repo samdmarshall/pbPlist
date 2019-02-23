@@ -164,15 +164,6 @@ test: clean
 
 # ---
 
-upload_artifacts = @$(PRINTF) "Checking for path to upload artifacts..." ; \
-if [ -d $1 ] ; then \
-	$(PRINTF) "uploading.\n" ; \
-	$(CP) -r ./htmlcov $1 ; \
-	$(CP) lint_output.txt $1 ; \
-else \
-	$(PRINTF) "skipping.\n" ; \
-fi
-
 run_cctreporter = @$(PRINTF) "Checking CI branch to upload coverage results... " ; \
 if [ "$(CIRCLE_BRANCH)" = "develop" ]; then \
 	$(PRINTF) "OK.\n"; \
@@ -198,10 +189,6 @@ report:
 	@$(COVERAGE) html
 	@$(PRINTF) "done!\n"
 	@$(PRINTF) "Generated html report is located at: ./htmlcov/index.html\n"
-ifdef CIRCLE_ARTIFACTS
-	@$(DISPLAY_SEPARATOR)
-	$(call upload_artifacts,$(CIRCLE_ARTIFACTS))
-endif
 	@$(DISPLAY_SEPARATOR)
 	$(call run_cctreporter)
 	@$(DISPLAY_SEPARATOR)
