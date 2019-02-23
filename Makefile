@@ -154,15 +154,9 @@ clean:
 
 # ---
 
-build2: clean
-	$(PYTHON2) ./setup.py install --record $(INSTALLED_FILES_RECORD)
-	@$(DISPLAY_SEPARATOR)
-
-build3: clean
+build: clean
 	$(PYTHON3) ./setup.py install --record $(INSTALLED_FILES_RECORD)
 	@$(DISPLAY_SEPARATOR)
-
-build: build2 build3
 
 # ---
 
