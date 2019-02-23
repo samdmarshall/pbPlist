@@ -12,7 +12,13 @@ jobs:
       - image: circleci/python:3.7.2
     steps:
       - checkout
-      - run: make ci
+      - run: make ci || make report
+      - store_test_results:
+        - htmlcov/
+      - store_artifacts:
+        - htmlcov/
+        - lint_output.txt
+        - installed_files.txt
   danger:
     docker:
       - image: circleci/ruby
