@@ -60,7 +60,7 @@ TPUT_CMD := tput
 TR_CMD := tr
 PYLINT_CMD := pylint
 PYENV_CMD := pyenv
-
+GEM_CMD := gem
 TOX_PYENV := tox-pyenv
 
 
@@ -88,6 +88,7 @@ TPUT = $(shell command -v $(TPUT_CMD) 2> /dev/null)
 TR = $(shell command -v $(TR_CMD) 2> /dev/null)
 PYLINT = $(shell command -v $(PYLINT_CMD) 2> /dev/null)
 PYENV = $(shell command -v $(PYENV_CMD) 2> /dev/null)
+GEM = $(shell command -v $(GEM_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
@@ -114,7 +115,8 @@ install-deps:
 	@$(DISPLAY_SEPARATOR)
 
 install-gems:
-	$(call geminstall,$(DANGER_CMD))
+	$(call geminstall,"bundler")
+	$(call bundle)
 	@$(DISPLAY_SEPARATOR)
 
 # ---
@@ -229,7 +231,7 @@ endif
 
 # ---
 
-ci: test lint report danger
+ci: test lint report
 
 # ---
 
@@ -243,4 +245,4 @@ lint:
 
 # ---
 
-.PHONY: danger lint ci report test build clean install-tools install-deps 
+.PHONY: danger lint ci report test build clean install-tools install-deps install-gems

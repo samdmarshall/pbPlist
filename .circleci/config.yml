@@ -5,15 +5,30 @@ jobs:
     docker:
       - image: circleci/python:3.7.2
     steps:
-      run: make build
+      - checkout
+      - run: make build
   test:
     docker:
       - image: circleci/python:3.7.2
     steps:
-      run: make ci
+      - checkout
+      - run: make ci
   danger:
     docker:
       - image: circleci/ruby
     steps:
-      run: make danger
+      - checkout
+      - run: make install-gems
+      - run: make danger
 
+workflows:
+  version: 2
+  primary:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - danger:
+          requires:
+            - test
