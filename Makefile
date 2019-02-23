@@ -231,7 +231,7 @@ ci: test lint report
 lint:
 	@$(TOUCH) lint_output.txt
 	@$(PRINTF) "Running linter... "
-	@$(PYLINT) --rcfile=pylintrc ./pbPlist > lint_output.txt || :
+	@pylint --rcfile=pylintrc pbPlist > lint_output.txt || true
 	@$(PRINTF) " done!\n"
 	@$(PRINTF) "Generated linter report: lint_output.txt\n"
 	@$(DISPLAY_SEPARATOR)
