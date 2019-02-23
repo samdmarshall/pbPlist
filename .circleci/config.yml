@@ -17,7 +17,9 @@ jobs:
         - path: htmlcov/
       - store_artifacts:
         - path: htmlcov/
+      - store_artifacts:
         - path: lint_output.txt
+      - store_artifacts:
         - path: installed_files.txt
   danger:
     docker:
