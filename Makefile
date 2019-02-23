@@ -104,8 +104,8 @@ DISPLAY_SEPARATOR := $(PRINTF) "%*.s\n" 80 " " | $(TR) ' ' '='
 # ---
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
-pipthreeinstall = @$(PIP3_CMD) install $1
-geminstall = @$(GEM) install $1
+pipthreeinstall = @$(PIP3_CMD) install $1 --user
+geminstall = @$(GEM) install $1 --user
 
 pyenv_exec = @$(PYENV_CMD) $1 $2
 
