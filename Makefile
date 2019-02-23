@@ -159,7 +159,7 @@ build: clean
 # ---
 
 test: clean
-	$(TOX)
+	$(TOX) || true
 	@$(DISPLAY_SEPARATOR)
 
 # ---
