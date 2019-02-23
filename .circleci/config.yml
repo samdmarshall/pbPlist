@@ -12,7 +12,7 @@ jobs:
       - image: circleci/python:3.7.2
     steps:
       - checkout
-      - run: make install-deps
+      - run: sudo make install-deps
       - run: make ci
       - store_test_results:
           path: htmlcov/
