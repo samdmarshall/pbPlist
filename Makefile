@@ -99,7 +99,10 @@ endif
 
 DISPLAY_SEPARATOR := $(PRINTF) "%*.s\n" 80 " " | $(TR) ' ' '='
 
-# Targets
+CI_INSTALL_PATH = $(shell  python3 -m site --user-site)
+CI_PYLINT = $(CI_INSTALL_PATH)/pylint
+CI_TOX = $(CI_INSTALL_PATH)/tox
+CI_COVERAGE = $(CI_INSTALL_PATH)/coverage
 
 # ---
 
@@ -161,7 +164,7 @@ build: clean
 # ---
 
 test: clean
-	$(TOX)
+	$(CI_TOX)
 	@$(DISPLAY_SEPARATOR)
 
 # ---
@@ -194,10 +197,10 @@ fi \
 
 report:
 	@$(call checktest)
-	$(COVERAGE) report
+	$(CI_COVERAGE) report
 	@$(DISPLAY_SEPARATOR)
 	@$(PRINTF) "Generating html report... "
-	@$(COVERAGE) html
+	@$(CI_COVERAGE) html
 	@$(PRINTF) "done!\n"
 	@$(PRINTF) "Generated html report is located at: ./htmlcov/index.html\n"
 ifdef CIRCLE_ARTIFACTS
@@ -231,7 +234,7 @@ ci: test lint report
 lint:
 	@$(TOUCH) lint_output.txt
 	@$(PRINTF) "Running linter... "
-	@pylint --rcfile=pylintrc pbPlist > lint_output.txt || true
+	@$(CI_PYLINT) --rcfile=pylintrc pbPlist > lint_output.txt || true
 	@$(PRINTF) " done!\n"
 	@$(PRINTF) "Generated linter report: lint_output.txt\n"
 	@$(DISPLAY_SEPARATOR)
