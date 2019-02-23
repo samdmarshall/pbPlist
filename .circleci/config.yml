@@ -1,0 +1,19 @@
+---
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.2
+    steps:
+      run: make build
+  test:
+    docker:
+      - image: circleci/python:3.7.2
+    steps:
+      run: make ci
+  danger:
+    docker:
+      - image: circleci/ruby
+    steps:
+      run: make danger
+
