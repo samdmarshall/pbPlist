@@ -6,7 +6,7 @@ jobs:
       - image: circleci/python:3.7.2
     steps:
       - checkout
-      - run: make build
+      - run: sudo make build
       - store_artifacts:
           path: installed_files.txt
   test:
