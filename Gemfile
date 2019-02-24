@@ -31,3 +31,4 @@
 source 'https://rubygems.org'
 
 gem 'danger'
+gem 'danger-junit', :git => 'git@github.com:orta/danger-junit.git'

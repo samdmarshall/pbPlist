@@ -1,0 +1,53 @@
+---
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.2
+    steps:
+      - checkout
+      - run: sudo make build
+      - store_artifacts:
+          path: installed_files.txt
+  test:
+    docker:
+      - image: circleci/python:3.7.2
+    steps:
+      - checkout
+      - run: sudo make install-deps
+      - run: make ci
+      - store_test_results:
+          path: htmlcov/
+      - store_test_results:
+          path: test-reports/
+      - store_artifacts:
+          path: test-reports/
+      - store_artifacts:
+          path: htmlcov/
+      - store_artifacts:
+          path: lint_output.txt
+      - save_cache:
+          key: pbPlist-{{ .Revision }}
+          paths:
+            - test-reports/
+  danger:
+    docker:
+      - image: circleci/ruby
+    steps:
+      - checkout
+      - run: bundle install
+      - restore_cache:
+          key: pbPlist-{{ .Revision }}
+      - run: bundle exec danger --verbose
+
+workflows:
+  version: 2
+  primary:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - danger:
+          requires:
+            - test

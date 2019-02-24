@@ -42,6 +42,9 @@ setup(
         'pbPlist'
     ],
     test_suite = 'tests',
+    tests_require = [
+        'unittest-xml-reporting',
+    ],
     zip_safe = False,
     install_requires = [
         'biplist',
