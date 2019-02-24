@@ -38,7 +38,7 @@ jobs:
       - run: bundle install
       - restore_cache:
           key: pbPlist-{{ .Revision }}
-      - run: make danger
+      - run: bundle exec danger --verbose
 
 workflows:
   version: 2
