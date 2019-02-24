@@ -34,6 +34,8 @@ import unittest
 from pbPlist         import pbPlist
 from pbPlist.pbRoot  import pbRoot
 
+import xmlrunner
+
 if sys.version_info < (3, 0):
     def StringType():
         return unicode
@@ -257,6 +259,11 @@ class pbPlistTestCases(unittest.TestCase):
         self.assertEqual(len(test_input.root.keys()), 109)
 
 if __name__ == '__main__':
-    testsuite = unittest.TestLoader()
-    testsuite.addTest(pbPlistTestCases)
-    unittest.TextTestRunner(verbosity=1).run(testsuite)
+    unittest.main(
+        testRunner=xmlrunner.XMLTestRunner(output='test-reports', outsuffix=os.environ['TOX_ENV_NAME']),
+        failfast=False,
+        buffer=False,
+        catchbreak=False,
+        exit=False
+    )
+        

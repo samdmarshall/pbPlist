@@ -153,7 +153,7 @@ clean:
 # ---
 
 build: clean
-	$(PYTHON3) ./setup.py install --record $(INSTALLED_FILES_RECORD) --user
+	$(PYTHON3) ./setup.py install --record $(INSTALLED_FILES_RECORD)
 	@$(DISPLAY_SEPARATOR)
 
 # ---

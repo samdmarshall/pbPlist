@@ -28,3 +28,12 @@
 
 # Run the shared Dangerfile with these settings
 danger.import_dangerfile(github: 'samdmarshall/danger')
+
+junit.parse Dir["test-reports/*-py27.xml"][0]
+junit.report
+
+junit.parse Dir["test-reports/*-py35.xml"][0]
+junit.report
+
+junit.parse Dir["test-reports/*-py372.xml"][0]
+junit.report

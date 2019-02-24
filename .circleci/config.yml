@@ -20,6 +20,10 @@ jobs:
           path: htmlcov/
       - store_test_results:
           path: coverage.xml
+      - store_test_results:
+          path: test_results/
+      - store_artifacts:
+          path: test_results/
       - store_artifacts:
           path: htmlcov/
       - store_artifacts:

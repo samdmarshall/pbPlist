@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:orta/danger-junit.git
+  revision: 32fc5d2c026604a0880a3901783628dab06e4877
+  specs:
+    danger-junit (1.0.0)
+      danger (> 2.0)
+      ox (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -33,6 +41,7 @@ GEM
     octokit (4.6.2)
       sawyer (~> 0.8.0, >= 0.5.3)
     open4 (1.3.4)
+    ox (2.10.0)
     public_suffix (2.0.4)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
@@ -46,6 +55,7 @@ PLATFORMS
 
 DEPENDENCIES
   danger
+  danger-junit!
 
 BUNDLED WITH
-   1.13.7
+   1.17.2

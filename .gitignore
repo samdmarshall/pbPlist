@@ -38,3 +38,7 @@ output.plist
 /installed_files.txt
 
 .python-version
+.coverage*
+.eggs/
+coverage.xml
+test-reports/

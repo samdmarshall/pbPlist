@@ -4,3 +4,4 @@ coverage
 tox
 codeclimate-test-reporter
 pylint
+unittest-xml-reporting
