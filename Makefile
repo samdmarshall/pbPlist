@@ -182,6 +182,7 @@ else \
 fi \
 
 report:
+	$(COVERAGE) combine
 	@$(call checktest)
 	$(COVERAGE) report
 	@$(DISPLAY_SEPARATOR)
