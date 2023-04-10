@@ -32,6 +32,11 @@ from functools import cmp_to_key
 import collections
 from .         import pbItem
 
+try:
+    collections = collections.abc
+except AttributeError:
+    collections = collections
+
 def StringCmp(obj1, obj2):
     result = -1
     if obj1 > obj2:
