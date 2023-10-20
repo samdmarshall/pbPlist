@@ -103,7 +103,11 @@ class PBParser(object):
             if case('<?xml '):
                 self.file_type = 'xml'
                 import plistlib
-                parsed_plist = plistlib.readPlist(self.file_path)
+                if sys.version_info >= (3, 9):
+                    with OpenFile(self.file_path) as fd:
+                        parsed_plist = plistlib.load(fd)
+                else:
+                    parsed_plist = plistlib.readPlist(self.file_path)
                 break
             if case():
                 self.file_type = 'ascii'

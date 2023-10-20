@@ -29,7 +29,11 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from functools import cmp_to_key
-import collections
+import sys
+if sys.version_info >= (3.10):
+    from collections.abc import MutableMapping
+else:
+    from collections import MutableMapping
 from .         import pbItem
 
 def StringCmp(obj1, obj2):
@@ -50,7 +54,7 @@ def KeySorter(obj1, obj2):
         result = StringCmp(str(obj1), str(obj2))
     return result
 
-class pbRoot(collections.MutableMapping):
+class pbRoot(MutableMapping):
 
     def __init__(self, *args, **kwargs):
         self.store = dict()
