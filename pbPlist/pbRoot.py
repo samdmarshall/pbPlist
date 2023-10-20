@@ -30,7 +30,7 @@
 
 from functools import cmp_to_key
 import sys
-if sys.version_info >= (3.10):
+if sys.version_info >= (3, 10):
     from collections.abc import MutableMapping
 else:
     from collections import MutableMapping
